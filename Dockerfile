@@ -1,12 +1,12 @@
 FROM php:8.2-cli
 
-# Instalar dependencias del sistema
+# Dependencias del sistema
 RUN apt-get update && apt-get install -y \
     git unzip libsqlite3-dev curl \
     && docker-php-ext-install pdo pdo_sqlite
 
-# Instalar Node.js (para Vite)
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+# 👉 Instalar Node 20 (NO 18)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs
 
 WORKDIR /opt/render/project/src
@@ -14,16 +14,15 @@ WORKDIR /opt/render/project/src
 # Copiar proyecto
 COPY . .
 
-# Instalar Composer
+# Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Instalar dependencias PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Instalar dependencias JS y compilar assets
-RUN npm install && npm run build
+# Frontend (Vite)
+RUN npm install
+RUN npm run build
 
-# Crear archivo sqlite si no existe
+# Crear SQLite
 RUN touch database/database.sqlite
 
 EXPOSE 10000
