@@ -87,6 +87,11 @@ class GeneratorController extends Controller
                 ->with('error', 'Debes seleccionar un personaje.');
         }
 
+        if (! $request->user()->canCreatePrompt()) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Has alcanzado el límite de 5 prompts del plan gratuito.');
+        }
+
         $fields = config('promptgen.fields');
         $content = $this->buildPrompt($selection, $fields);
 
