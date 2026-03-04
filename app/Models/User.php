@@ -8,6 +8,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    public const FREE_PROMPT_LIMIT = 5;
+
     use HasFactory, Notifiable;
 
     protected $fillable = [
@@ -44,5 +46,17 @@ class User extends Authenticatable
     public function isPro(): bool
     {
         return $this->plan === 'pro';
+    }
+
+    /**
+     * Check if user can generate one more prompt under their plan.
+     */
+    public function canCreatePrompt(): bool
+    {
+        if ($this->isPro()) {
+            return true;
+        }
+
+        return $this->prompts()->count() < self::FREE_PROMPT_LIMIT;
     }
 }

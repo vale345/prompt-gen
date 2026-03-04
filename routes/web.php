@@ -33,6 +33,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/generator/select/{field}', [GeneratorController::class, 'select'])->name('generator.select');
     Route::post('/generator/store/{field}', [GeneratorController::class, 'store'])->name('generator.store');
     Route::get('/generator/summary',       [GeneratorController::class, 'summary'])->name('generator.summary');
-    Route::post('/generator/generate',     [GeneratorController::class, 'generate'])->name('generator.generate');
+    Route::post('/generator/generate',     [GeneratorController::class, 'generate'])->middleware('prompt.quota')->name('generator.generate');
     Route::get('/generator/result/{prompt}',[GeneratorController::class, 'result'])->name('generator.result');
 });
