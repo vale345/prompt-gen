@@ -33,10 +33,26 @@
     {{-- Navbar --}}
     <nav class="sticky top-0 z-50 border-b border-[var(--clr-border)] bg-[var(--clr-surface)]/95 backdrop-blur-sm">
         <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-            <a href="{{ route('landing') }}" class="flex items-center gap-2 text-lg font-bold tracking-tight" style="font-family:'DM Sans',sans-serif;">
+            <!-- <a href="{{ route('landing') }}" class="flex items-center gap-2 text-lg font-bold tracking-tight" style="font-family:'DM Sans',sans-serif;">
                 <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--clr-primary)] text-sm font-bold text-white">P</span>
                 PromptGen
-            </a>
+            </a> -->
+<a href="{{ route('landing') }}" class="flex items-center gap-2 text-lg font-bold tracking-tight" style="font-family:'DM Sans',sans-serif;">
+    <span class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-white">
+        <!-- Icono varita mágica -->
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="w-4 h-4"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 4l5 5M4 15l5 5M14 5l5 5M5 14l5 5M9 9l6 6"/>
+        </svg>
+    </span>
+    PromptGen
+</a>
 
             <div class="flex items-center gap-3">
                 @auth

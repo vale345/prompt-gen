@@ -5,9 +5,22 @@
 <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
     {{-- Hero --}}
     <div class="flex flex-col items-center text-center">
-        <span class="mb-4 inline-block rounded-full bg-brand-light px-4 py-1.5 text-xs font-semibold tracking-wide text-brand">
+        <!-- <span class="mb-4 inline-block rounded-full bg-brand-light px-4 py-1.5 text-xs font-semibold tracking-wide text-brand">
             NUEVO
-        </span>
+        </span> -->
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-sky-100 text-sky-700 text-sm font-medium mb-6">
+    <svg xmlns="http://www.w3.org/2000/svg" 
+         class="w-4 h-4" 
+         fill="none" 
+         viewBox="0 0 24 24" 
+         stroke="currentColor">
+        <path stroke-linecap="round" 
+              stroke-linejoin="round" 
+              stroke-width="2"
+              d="M5 3v4M3 5h4M19 3v4M17 5h4M12 8v4M10 10h4M5 17v4M3 19h4M19 17v4M17 19h4" />
+    </svg>
+    Generador inteligente de prompts
+</div>
 
         <h1 class="max-w-3xl text-balance font-heading text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             Generador Magico de Prompts
