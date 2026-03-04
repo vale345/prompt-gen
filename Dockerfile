@@ -1,24 +1,30 @@
 FROM php:8.2-cli
 
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    zip \
-    libzip-dev \
-    curl
+    git unzip libsqlite3-dev \
+    && docker-php-ext-install pdo pdo_sqlite
 
-RUN docker-php-ext-install pdo pdo_mysql zip
+# Setear directorio de trabajo
+WORKDIR /opt/render/project/src
 
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-WORKDIR /app
-
+# Copiar proyecto
 COPY . .
 
+# Instalar Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Instalar dependencias PHP
 RUN composer install --no-dev --optimize-autoloader
 
-RUN chmod -R 777 storage bootstrap/cache
+# Crear archivo sqlite si no existe
+RUN touch database/database.sqlite
 
+# Exponer puerto
 EXPOSE 10000
 
-CMD php -S 0.0.0.0:10000 -t public
+# Comando de inicio
+CMD php artisan key:generate --force \
+ && php artisan config:clear \
+ && php artisan migrate --force \
+ && php artisan serve --host 0.0.0.0 --port 10000
