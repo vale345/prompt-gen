@@ -27,7 +27,9 @@ RUN touch database/database.sqlite
 
 EXPOSE 10000
 
-CMD php artisan key:generate --force \
- && php artisan config:clear \
- && php artisan migrate --force \
+# CMD php artisan key:generate --force \
+#  && php artisan config:clear \
+#  && php artisan migrate --force \
+#  && php artisan serve --host 0.0.0.0 --port 10000
+CMD php artisan migrate --force \
  && php artisan serve --host 0.0.0.0 --port 10000
