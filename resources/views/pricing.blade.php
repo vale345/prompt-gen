@@ -84,9 +84,13 @@
                             Tu plan actual
                         </span>
                     @else
-                        <button class="flex w-full items-center justify-center rounded-xl bg-brand py-3 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-dark">
-                            Actualizar a Pro
-                        </button>
+                        <form method="POST" action="{{ route('billing.checkout') }}">
+                            @csrf
+                            <input type="hidden" name="plan_code" value="pro_monthly">
+                            <button type="submit" class="flex w-full items-center justify-center rounded-xl bg-brand py-3 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-dark">
+                                Actualizar a Pro
+                            </button>
+                        </form>
                     @endif
                 @else
                     <a href="{{ route('register') }}" class="flex w-full items-center justify-center rounded-xl bg-brand py-3 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-dark">
