@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GeneratorController;
+use App\Http\Controllers\BillingController;
+use App\Http\Controllers\MercadoPagoWebhookController;
 
 // ── Landing ──────────────────────────────────────────────
 Route::get('/', fn () => view('landing'))->name('landing');
@@ -33,6 +35,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/generator/select/{field}', [GeneratorController::class, 'select'])->name('generator.select');
     Route::post('/generator/store/{field}', [GeneratorController::class, 'store'])->name('generator.store');
     Route::get('/generator/summary',       [GeneratorController::class, 'summary'])->name('generator.summary');
-    Route::post('/generator/generate',     [GeneratorController::class, 'generate'])->name('generator.generate');
+    Route::post('/generator/generate',     [GeneratorController::class, 'generate'])->middleware('prompt.quota')->name('generator.generate');
     Route::get('/generator/result/{prompt}',[GeneratorController::class, 'result'])->name('generator.result');
+
+    // Billing
+    Route::post('/billing/checkout', [BillingController::class, 'createPreference'])->name('billing.checkout');
+    Route::get('/billing/success', [BillingController::class, 'success'])->name('billing.success');
+    Route::get('/billing/failure', [BillingController::class, 'failure'])->name('billing.failure');
+    Route::get('/billing/pending', [BillingController::class, 'pending'])->name('billing.pending');
 });
+
+Route::post('/webhooks/mercadopago', [MercadoPagoWebhookController::class, 'handle'])->name('webhooks.mercadopago');

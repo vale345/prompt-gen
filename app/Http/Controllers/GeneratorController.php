@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Prompt;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\DB;
 
 class GeneratorController extends Controller
 {
@@ -90,10 +92,26 @@ class GeneratorController extends Controller
         $fields = config('promptgen.fields');
         $content = $this->buildPrompt($selection, $fields);
 
-        $prompt = $request->user()->prompts()->create([
-            'content'   => $content,
-            'selection' => $selection,
-        ]);
+        $prompt = DB::transaction(function () use ($request, $content, $selection) {
+            $lockedUser = User::query()
+                ->whereKey($request->user()->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if (! $lockedUser->canCreatePrompt()) {
+                return null;
+            }
+
+            return $lockedUser->prompts()->create([
+                'content'   => $content,
+                'selection' => $selection,
+            ]);
+        });
+
+        if (! $prompt) {
+            return redirect()->route('dashboard')
+                ->with('error', 'Has alcanzado el límite de 5 prompts del plan gratuito.');
+        }
 
         // Clear session
         $request->session()->forget('generator');

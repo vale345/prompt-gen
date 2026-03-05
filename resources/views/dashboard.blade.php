@@ -15,6 +15,15 @@
             <span class="inline-flex items-center gap-1.5 rounded-full {{ $user->plan === 'pro' ? 'bg-accent-light text-accent-dark' : 'bg-brand-light text-brand' }} px-3 py-1 text-xs font-semibold uppercase tracking-wide">
                 Plan {{ ucfirst($user->plan) }}
             </span>
+            @if ($user->plan === 'free')
+                <form method="POST" action="{{ route('billing.checkout') }}">
+                    @csrf
+                    <input type="hidden" name="plan_code" value="pro_monthly">
+                    <button type="submit" class="rounded-xl border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand-light/40">
+                        Actualizar a Pro
+                    </button>
+                </form>
+            @endif
             <a href="{{ route('generator') }}"
                class="rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition hover:bg-brand-dark">
                 Nuevo prompt
