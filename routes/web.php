@@ -48,9 +48,4 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// ── Prompt generator (public) ──────────────────────────
-Route::get('/prompt-generator', [PromptController::class, 'index'])->name('prompt.form');
-Route::post('/prompt-generator', [PromptController::class, 'generate'])->name('prompt.generate');
-Route::get('/prompt-generator/result', [PromptController::class, 'result'])->name('prompt.result');
-
 Route::post('/webhooks/mercadopago', [MercadoPagoWebhookController::class, 'handle'])->name('webhooks.mercadopago');
