@@ -12,6 +12,7 @@ class PromptQuotaMiddlewareTest extends TestCase
 
     public function test_free_user_cannot_generate_more_than_five_prompts(): void
     {
+        /** @var User $user */
         $user = User::factory()->create(['plan' => 'free']);
 
         $user->prompts()->createMany(array_fill(0, 5, [
@@ -30,6 +31,7 @@ class PromptQuotaMiddlewareTest extends TestCase
 
     public function test_pro_user_can_generate_after_five_prompts(): void
     {
+        /** @var User $user */
         $user = User::factory()->create(['plan' => 'pro']);
 
         $user->prompts()->createMany(array_fill(0, 5, [

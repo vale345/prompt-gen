@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
+use App\Services\PromptBuilder;
 
 class GeneratorController extends Controller
 {
@@ -137,42 +138,32 @@ class GeneratorController extends Controller
     /**
      * Build a descriptive prompt string from the selection.
      */
-    private function buildPrompt(array $selection, array $fields): string
-    {
-        $parts = [];
+private function buildPrompt(array $selection, array $fields): string
+{
+    $data = [
+        'subject' => $this->findLabel($fields['personaje']['options'], $selection['personaje'] ?? ''),
+        'style' => !empty($selection['estilo'])
+            ? $this->findLabel($fields['estilo']['options'], $selection['estilo'])
+            : '',
 
-        // Character (required)
-        $label = $this->findLabel($fields['personaje']['options'], $selection['personaje']);
-        $parts[] = "A highly detailed image of a {$label}";
+        'composition' => 'centered subject, clear focal point',
 
-        // Style
-        if (! empty($selection['estilo'])) {
-            $label = $this->findLabel($fields['estilo']['options'], $selection['estilo']);
-            $parts[] = "in {$label} style";
-        }
+        'lighting' => 'soft studio lighting',
 
-        // Environment
-        if (! empty($selection['ambiente'])) {
-            $label = $this->findLabel($fields['ambiente']['options'], $selection['ambiente']);
-            $parts[] = "set in a {$label} environment";
-        }
+        'colors' => 'vibrant',
 
-        // Commercial use
-        if (! empty($selection['uso'])) {
-            $label = $this->findLabel($fields['uso']['options'], $selection['uso']);
-            $parts[] = "optimized for {$label}";
-        }
+        'details' => !empty($selection['extras'])
+            ? $this->findLabel($fields['extras']['options'], $selection['extras'])
+            : '',
+    ];
 
-        // Extras
-        if (! empty($selection['extras'])) {
-            $label = $this->findLabel($fields['extras']['options'], $selection['extras']);
-            $parts[] = "with {$label}";
-        }
+    $result = PromptBuilder::build($data);
 
-        $parts[] = "high resolution, professional quality, commercial use ready, clean composition, vibrant colors";
+    return $result['prompt'];
+}
 
-        return implode(', ', $parts) . '.';
-    }
+
+
 
     private function findLabel(array $options, string $value): string
     {
