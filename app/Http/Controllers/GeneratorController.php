@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
-use App\Services\PromptBuilder;
 
 class GeneratorController extends Controller
 {
@@ -75,7 +74,9 @@ class GeneratorController extends Controller
                 ->with('error', 'Debes seleccionar un personaje antes de continuar.');
         }
 
-        return view('generator.summary', compact('fields', 'selection'));
+        $finalPrompt = $this->buildPrompt($selection, $fields);
+
+        return view('generator.summary', compact('fields', 'selection', 'finalPrompt'));
     }
 
     /**
@@ -136,34 +137,44 @@ class GeneratorController extends Controller
     }
 
     /**
-     * Build a descriptive prompt string from the selection.
+     * Build base prompt and apply AI template.
      */
-private function buildPrompt(array $selection, array $fields): string
-{
-    $data = [
-        'subject' => $this->findLabel($fields['personaje']['options'], $selection['personaje'] ?? ''),
-        'style' => !empty($selection['estilo'])
-            ? $this->findLabel($fields['estilo']['options'], $selection['estilo'])
-            : '',
+    private function buildPrompt(array $selection, array $fields): string
+    {
+        $basePrompt = $this->buildBasePrompt($selection, $fields);
 
-        'composition' => 'centered subject, clear focal point',
+        return $this->applyAiTemplate($basePrompt, $selection['ia'] ?? 'auto');
+    }
 
-        'lighting' => 'soft studio lighting',
+    private function buildBasePrompt(array $selection, array $fields): string
+    {
+        $parts = [];
 
-        'colors' => 'vibrant',
+        $subject = $this->findLabel($fields['personaje']['options'], $selection['personaje'] ?? '');
+        if ($subject !== '') {
+            $parts[] = $subject;
+        }
 
-        'details' => !empty($selection['extras'])
-            ? $this->findLabel($fields['extras']['options'], $selection['extras'])
-            : '',
-    ];
+        foreach (['estilo', 'ambiente', 'uso', 'extras'] as $field) {
+            if (! empty($selection[$field])) {
+                $parts[] = $this->findLabel($fields[$field]['options'], $selection[$field]);
+            }
+        }
 
-    $result = PromptBuilder::build($data);
+        return implode(', ', array_filter($parts));
+    }
 
-    return $result['prompt'];
-}
+    private function applyAiTemplate(string $basePrompt, string $ia): string
+    {
+        $templates = config('prompt_templates', []);
 
+        $selectedIa = strtolower($ia);
+        if ($selectedIa === 'auto' || ! isset($templates[$selectedIa])) {
+            $selectedIa = 'chatgpt';
+        }
 
-
+        return str_replace('{prompt}', $basePrompt, $templates[$selectedIa]);
+    }
 
     private function findLabel(array $options, string $value): string
     {
@@ -172,6 +183,7 @@ private function buildPrompt(array $selection, array $fields): string
                 return strtolower($opt['label']);
             }
         }
+
         return $value;
     }
 }

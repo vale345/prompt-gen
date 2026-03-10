@@ -44,6 +44,12 @@
         @endforeach
     </div>
 
+
+    <div class="mt-8 rounded-xl border border-[var(--clr-border)] bg-surface px-6 py-4">
+        <p class="text-sm font-medium">Prompt final</p>
+        <p class="mt-2 whitespace-pre-wrap text-sm text-muted">{{ $finalPrompt }}</p>
+    </div>
+
     {{-- Actions --}}
     <div class="mt-8 flex items-center gap-3">
         <a href="{{ route('generator') }}"

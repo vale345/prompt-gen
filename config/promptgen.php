@@ -106,16 +106,17 @@ return [
             ],
         ],
 
+
         'ia' => [
             'label'       => 'IA destino',
-            'description' => 'Optimiza el prompt para la IA que vas a usar',
+            'description' => 'Plataforma donde vas a usar el prompt',
             'badge'       => 'Opcional',
             'required'    => false,
             'options'     => [
-                ['value' => 'auto',       'label' => 'Automatico'],
-                ['value' => 'chatgpt',    'label' => 'ChatGPT Images'],
-                ['value' => 'midjourney', 'label' => 'MidJourney'],
-                ['value' => 'leonardo',   'label' => 'Leonardo AI'],
+                ['value' => 'auto',       'label' => 'Auto'],
+                ['value' => 'chatgpt',    'label' => 'ChatGPT'],
+                ['value' => 'midjourney', 'label' => 'Midjourney'],
+                ['value' => 'leonardo',   'label' => 'Leonardo'],
             ],
         ],
     ],
