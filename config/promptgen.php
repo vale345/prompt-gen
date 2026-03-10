@@ -105,6 +105,20 @@ return [
                 ['value' => 'cenital',         'label' => 'Vista cenital'],
             ],
         ],
+
+
+        'ia' => [
+            'label'       => 'IA destino',
+            'description' => 'Plataforma donde vas a usar el prompt',
+            'badge'       => 'Opcional',
+            'required'    => false,
+            'options'     => [
+                ['value' => 'auto',       'label' => 'Auto'],
+                ['value' => 'chatgpt',    'label' => 'ChatGPT'],
+                ['value' => 'midjourney', 'label' => 'Midjourney'],
+                ['value' => 'leonardo',   'label' => 'Leonardo'],
+            ],
+        ],
     ],
 ];
 
